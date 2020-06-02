@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import axios from 'axios';
+import axios from './axios';
 
 interface AuthContextProps {
   token: string;
@@ -26,24 +26,26 @@ const useProvideAuth = () => {
   const [token, setToken] = useState('');
 
   const signin = async (email: string, password: string) => {
-    const response = await axios.post('http://localhost:4000/signin', {
+    const response = await axios.post('signin', {
       email,
       password,
     });
     const {
       data: { token },
     } = response;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setToken(token);
   };
 
   const signup = async (email: string, password: string) => {
-    const response = await axios.post('http://localhost:4000/signup', {
+    const response = await axios.post('signup', {
       email,
       password,
     });
     const {
       data: { token },
     } = response;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setToken(token);
   };
 

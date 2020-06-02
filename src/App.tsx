@@ -1,7 +1,7 @@
 import React from 'react';
-import { css } from '@emotion/core';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
+import './App.css';
 import 'typeface-roboto';
 
 import SignUp from './modules/SignUp';
@@ -11,20 +11,13 @@ import Movie from './modules/Movie';
 
 const App = () => {
   return (
-    <div
-      className="App"
-      css={css`
-        display: flex;
-      `}
-    >
-      <Router>
-        <PrivateRoute exact path="/">
-          <Movie />
-        </PrivateRoute>
-        <Route path="/signup" component={SignUp} />
-        <Route path="/signin" component={SignIn} />
-      </Router>
-    </div>
+    <Router>
+      <PrivateRoute exact path="/">
+        <Movie />
+      </PrivateRoute>
+      <Route path="/signup" component={SignUp} />
+      <Route path="/signin" component={SignIn} />
+    </Router>
   );
 };
 
