@@ -1,4 +1,4 @@
-import React, { useState, CSSProperties } from 'react';
+import React, { useState, CSSProperties, useContext } from 'react';
 import { FixedSizeGrid as Grid } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -8,11 +8,11 @@ import { Link } from 'react-router-dom';
 
 import axios from '../../utils/axios';
 import { ItemStatusMap, Movie } from '../../types';
+import MovieContext from './MovieContext';
 
 let itemStatusMap: ItemStatusMap = {};
 
 const LOADED = true;
-const LOADING = false;
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 const COLUMN_COUNT = 4;
 
@@ -26,14 +26,10 @@ const grid = css`
 `;
 
 export default () => {
-  const hasNextPage = true;
-  const [items, setItems] = useState<Movie[]>([]);
+  const [items, setItems] = useContext<any>(MovieContext);
   const [page, setPage] = useState(1);
 
-  const loadNextPage = async (startIndex: number, stopIndex: number) => {
-    for (let index = startIndex; index <= stopIndex; index++) {
-      itemStatusMap[index] = LOADING;
-    }
+  const loadMoreItems = async (startIndex: number, stopIndex: number) => {
     const { data } = await axios.get(`api/movie?page=${page}`);
     setPage(page + 1);
     setItems([...items, ...data]);
@@ -43,17 +39,17 @@ export default () => {
   };
 
   // If there are more items to be loaded then add an extra row to hold a loading indicator.
-  const itemCount = hasNextPage ? items.length + 1 : items.length;
+  const itemCount = items.length + COLUMN_COUNT;
 
-  // Every row is loaded except for our loading indicator row.
-  const isItemLoaded = (index: number) => !hasNextPage || index < items.length;
+  // Every row is loaded except for loading indicator row.
+  const isItemLoaded = (index: number) => index < items.length;
 
   // Render an item or a loading indicator.
   const Item = ({ columnIndex, rowIndex, style }: { columnIndex: number; rowIndex: number; style: CSSProperties }) => {
     let label;
     const itemIndex = rowIndex * COLUMN_COUNT + columnIndex;
     const item = items[itemIndex];
-    if (itemStatusMap[itemIndex] === LOADED) {
+    if (item) {
       const picturePath = item.backdrop_path || item.poster_path || '';
       label = (
         <Link to={`/movie/${item.id}`}>
@@ -87,7 +83,7 @@ export default () => {
   return (
     <AutoSizer>
       {({ height, width }) => (
-        <InfiniteLoader isItemLoaded={isItemLoaded} loadMoreItems={loadNextPage} itemCount={itemCount}>
+        <InfiniteLoader isItemLoaded={isItemLoaded} loadMoreItems={loadMoreItems} itemCount={itemCount}>
           {({ onItemsRendered, ref }) => (
             <Grid
               css={grid}
