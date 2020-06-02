@@ -1,22 +1,26 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 
-import './App.css';
 import 'typeface-roboto';
 
-import SignUp from './modules/SignUp';
-import SignIn from './modules/SignIn';
+import SignUp from './modules/Auth/SignUp';
+import SignIn from './modules/Auth/SignIn';
 import PrivateRoute from './PrivateRoute';
-import Movie from './modules/Movie';
+import Movies from './modules/Movie/Movies';
 
 const App = () => {
   return (
     <Router>
-      <PrivateRoute exact path="/">
-        <Movie />
-      </PrivateRoute>
-      <Route path="/signup" component={SignUp} />
-      <Route path="/signin" component={SignIn} />
+      <Switch>
+        <PrivateRoute exact path="/">
+          <Redirect to="/movie" />
+        </PrivateRoute>
+        <PrivateRoute path="/movie">
+          <Movies />
+        </PrivateRoute>
+        <Route path="/signup" component={SignUp} />
+        <Route path="/signin" component={SignIn} />
+      </Switch>
     </Router>
   );
 };

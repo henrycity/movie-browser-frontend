@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+
 import axios from './axios';
 
 interface AuthContextProps {
@@ -25,6 +26,14 @@ export const AuthProvider: React.FunctionComponent = ({ children }) => {
 const useProvideAuth = () => {
   const [token, setToken] = useState('');
 
+  useEffect(() => {
+    const localStorageToken = localStorage.getItem('token');
+    if (localStorageToken) {
+      setToken(localStorageToken);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${localStorageToken}`;
+    }
+  }, []);
+
   const signin = async (email: string, password: string) => {
     const response = await axios.post('signin', {
       email,
@@ -34,6 +43,7 @@ const useProvideAuth = () => {
       data: { token },
     } = response;
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    localStorage.setItem('token', token);
     setToken(token);
   };
 
@@ -46,6 +56,7 @@ const useProvideAuth = () => {
       data: { token },
     } = response;
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    localStorage.setItem('token', token);
     setToken(token);
   };
 

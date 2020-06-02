@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link, Redirect } from 'react-router-dom';
 
-import { useAuth } from '../utils/auth';
+import { useAuth } from '../../utils/auth';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -109,7 +109,7 @@ const AuthForm: React.FunctionComponent<SignUpProps> = (props) => {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link to={`/${isSignInForm ? 'signup' : 'signin'}`}>
+              <Link to={`/${isSignInForm ? 'signup' : 'signin'}`} style={{ color: 'inherit', textDecoration: 'none' }}>
                 {isSignInForm ? "Don't have an account? Sign Up" : 'Already have an account? Sign in'}
               </Link>
             </Grid>
