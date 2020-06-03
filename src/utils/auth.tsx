@@ -26,15 +26,9 @@ export const AuthProvider: React.FunctionComponent = ({ children }) => {
 };
 
 const useProvideAuth = () => {
-  const [token, setToken] = useState('');
-
-  useEffect(() => {
-    const localStorageToken = localStorage.getItem('token');
-    if (localStorageToken) {
-      setToken(localStorageToken);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${localStorageToken}`;
-    }
-  }, []);
+  const localStorageToken = localStorage.getItem('token');
+  const [token, setToken] = useState(localStorageToken || '');
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
   const signin = async (email: string, password: string) => {
     const response = await axios.post('signin', {

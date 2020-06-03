@@ -3,7 +3,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import MovieBrowser from './MovieBrowser';
 import Movie from './Movie';
 
-export default () => {
+const Movies = () => {
   const match = useRouteMatch();
 
   return (
@@ -13,3 +13,5 @@ export default () => {
     </Switch>
   );
 };
+
+export default Movies;

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import axios from '../../utils/axios';
-import { CircularProgress } from '@material-ui/core';
 import { css } from '@emotion/core';
+import LoadingIndicator from '../../components/LoadingIndicator';
 
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 
 const MovieInformation = () => {
   const { movieId } = useParams();
+  // TODO: Update typings
   const [movie, setMovie] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -19,7 +20,7 @@ const MovieInformation = () => {
     });
   }, []);
   if (isLoading) {
-    return <CircularProgress />;
+    return <LoadingIndicator />;
   }
   const picturePath = movie.backdrop_path || movie.poster_path || '';
   return (

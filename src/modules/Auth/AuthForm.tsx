@@ -7,7 +7,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../utils/auth';
 
@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface SignUpProps {
-  location: any;
   isSignInForm: boolean;
 }
 
@@ -43,7 +42,8 @@ const AuthForm: React.FunctionComponent<SignUpProps> = (props) => {
   const [password, setPassword] = useState('');
   const { token, signin, signup } = useAuth();
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
-  const { from } = props.location.state || { from: { pathname: '/' } };
+  const location = useLocation<{ from: string }>();
+  const { from } = location.state || { from: { pathname: '/' } };
 
   if (redirectToReferrer) {
     return <Redirect to={from} />;
