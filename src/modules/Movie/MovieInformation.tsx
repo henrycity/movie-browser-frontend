@@ -7,7 +7,7 @@ import { css } from '@emotion/core';
 
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 
-export default () => {
+const MovieInformation = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,3 +43,5 @@ export default () => {
     </div>
   );
 };
+
+export default MovieInformation;

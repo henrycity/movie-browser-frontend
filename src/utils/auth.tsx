@@ -6,6 +6,7 @@ interface AuthContextProps {
   token: string;
   signin: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -16,6 +17,7 @@ const AuthContext = createContext<AuthContextProps>({
   signup: () => {
     return new Promise((resolve) => resolve);
   },
+  logout: () => {},
 });
 
 export const AuthProvider: React.FunctionComponent = ({ children }) => {
@@ -60,11 +62,18 @@ const useProvideAuth = () => {
     setToken(token);
   };
 
+  const logout = () => {
+    localStorage.clear();
+    setToken('');
+    delete axios.defaults.headers.common['Authorization'];
+  };
+
   // Return the user object and auth methods
   return {
     token,
     signin,
     signup,
+    logout,
   };
 };
 

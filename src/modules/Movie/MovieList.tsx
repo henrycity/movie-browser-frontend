@@ -7,7 +7,7 @@ import { CircularProgress } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 import axios from '../../utils/axios';
-import { ItemStatusMap, Movie } from '../../types';
+import { ItemStatusMap } from '../../types';
 import MovieContext from './MovieContext';
 
 let itemStatusMap: ItemStatusMap = {};
