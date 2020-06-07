@@ -24,8 +24,9 @@ const CreateListDialog: React.FunctionComponent<CreateListDialogProps> = ({ open
   };
 
   const handleCreate = async () => {
-    await axios.post('api/list', { list: listName });
+    await axios.post('api/list', { listName });
     handleClose();
+    setListName('');
   };
 
   return (

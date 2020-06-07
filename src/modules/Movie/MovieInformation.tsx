@@ -18,7 +18,7 @@ const MovieInformation = () => {
       setMovie(data);
       setIsLoading(false);
     });
-  }, []);
+  }, [movieId]);
   if (isLoading) {
     return <LoadingIndicator />;
   }

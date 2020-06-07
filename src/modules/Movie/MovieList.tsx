@@ -31,13 +31,12 @@ export default () => {
 
   const loadMoreItems = async (startIndex: number, stopIndex: number) => {
     const { data } = await axios.get(`api/movie?page=${page}`);
-    setPage(page + 1);
+    setPage((page) => page + 1);
     setItems([...items, ...data]);
     for (let index = startIndex; index < startIndex + data.length; index++) {
       itemStatusMap[index] = LOADED;
     }
   };
-
   // If there are more items to be loaded then add an extra row to hold a loading indicator.
   const itemCount = items.length + COLUMN_COUNT;
 

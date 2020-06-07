@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 import axios from './axios';
 
@@ -28,7 +28,9 @@ export const AuthProvider: React.FunctionComponent = ({ children }) => {
 const useProvideAuth = () => {
   const localStorageToken = localStorage.getItem('token');
   const [token, setToken] = useState(localStorageToken || '');
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
 
   const signin = async (email: string, password: string) => {
     const response = await axios.post('signin', {

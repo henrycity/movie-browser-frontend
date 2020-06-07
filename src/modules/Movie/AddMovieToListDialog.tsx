@@ -34,8 +34,8 @@ const AddMovieToListDialog: React.FunctionComponent<AddMovieToListDialogProps> =
 
   useEffect(() => {
     if (open) {
-      axios.get('api/list').then(({ data }) => {
-        setLists(data);
+      axios.get('api/user').then(({ data }) => {
+        setLists(data.lists);
       });
     }
   }, [open]);
