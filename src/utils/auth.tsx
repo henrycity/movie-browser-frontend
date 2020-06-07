@@ -9,16 +9,7 @@ interface AuthContextProps {
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextProps>({
-  token: '',
-  signin: () => {
-    return new Promise((resolve) => resolve);
-  },
-  signup: () => {
-    return new Promise((resolve) => resolve);
-  },
-  logout: () => {},
-});
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: React.FunctionComponent = ({ children }) => {
   const auth = useProvideAuth();
@@ -73,6 +64,10 @@ const useProvideAuth = () => {
   };
 };
 
-export const useAuth = (): AuthContextProps => {
-  return useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within a AuthProvider');
+  }
+  return context;
 };

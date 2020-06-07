@@ -6,14 +6,14 @@ import PrivateRoute from './components/PrivateRoute';
 import MovieContext from './modules/Movie/MovieContext';
 import MovieWatchList from './modules/Movie/MovieWatchList';
 import LoadingIndicator from './components/LoadingIndicator';
+import { Movie } from './types';
 
 const Movies = lazy(() => import('./modules/Movie/Movies'));
 const SignUp = lazy(() => import('./modules/Auth/SignUp'));
 const SignIn = lazy(() => import('./modules/Auth/SignIn'));
 
 const App = () => {
-  // TODO: Update typings
-  const movies = useState<any>([]);
+  const movies = useState<Movie[]>([]);
   return (
     <MovieContext.Provider value={movies}>
       <Router>

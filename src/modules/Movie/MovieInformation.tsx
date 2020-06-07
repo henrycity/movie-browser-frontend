@@ -4,13 +4,13 @@ import { useParams } from 'react-router-dom';
 import axios from '../../utils/axios';
 import { css } from '@emotion/core';
 import LoadingIndicator from '../../components/LoadingIndicator';
+import { Movie } from '../../types';
 
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 
 const MovieInformation = () => {
   const { movieId } = useParams();
-  // TODO: Update typings
-  const [movie, setMovie] = useState<any>(null);
+  const [movie, setMovie] = useState<Movie>();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const MovieInformation = () => {
       setIsLoading(false);
     });
   }, [movieId]);
-  if (isLoading) {
+  if (isLoading || !movie) {
     return <LoadingIndicator />;
   }
   const picturePath = movie.backdrop_path || movie.poster_path || '';
