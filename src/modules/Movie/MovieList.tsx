@@ -26,13 +26,13 @@ const grid = css`
 `;
 
 export default () => {
-  const [items, setItems] = useContext<any>(MovieContext);
+  const [items, setItems] = useContext(MovieContext);
   const [page, setPage] = useState(1);
 
   const loadMoreItems = async (startIndex: number, stopIndex: number) => {
     const { data } = await axios.get(`api/movie?page=${page}`);
     setPage((page) => page + 1);
-    setItems([...items, ...data]);
+    setItems((prevItems) => [...prevItems, ...data]);
     for (let index = startIndex; index < startIndex + data.length; index++) {
       itemStatusMap[index] = LOADED;
     }
@@ -85,6 +85,7 @@ export default () => {
         <InfiniteLoader isItemLoaded={isItemLoaded} loadMoreItems={loadMoreItems} itemCount={itemCount}>
           {({ onItemsRendered, ref }) => (
             <Grid
+              className="grid"
               css={grid}
               columnCount={COLUMN_COUNT}
               columnWidth={500}
