@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { AppBar, Button, Toolbar } from '@material-ui/core';
+import { AppBar, Button, TextField, Toolbar } from '@material-ui/core';
 import { css } from '@emotion/core';
 import { useHistory } from 'react-router-dom';
 
 import MovieList from './MovieList';
 import CreateListDialog from './CreateListDialog';
 import { useAuth } from '../../utils/auth';
+import { Movie } from '../../types';
 
 export default () => {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [movies, setMovies] = useState<Movie[]>([]);
   const { logout } = useAuth();
   const history = useHistory();
 
@@ -22,6 +25,12 @@ export default () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMovies([]);
+    const query = event.target.value;
+    setQuery(query);
   };
 
   return (
@@ -44,7 +53,25 @@ export default () => {
           <CreateListDialog open={open} handleClose={handleClose} />
         </Toolbar>
       </AppBar>
-      <MovieList />
+      <form
+        css={css`
+          display: flex;
+          justify-content: center;
+          margin: 1%;
+        `}
+        noValidate
+        autoComplete="off"
+      >
+        <TextField
+          css={css`
+            width: 20%;
+          `}
+          label="Movie Title"
+          onChange={handleChange}
+          value={query}
+        />
+      </form>
+      <MovieList query={query} movies={movies} setMovies={setMovies} />
     </>
   );
 };

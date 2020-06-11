@@ -1,4 +1,4 @@
-import React, { useState, CSSProperties, useContext } from 'react';
+import React, { useState, CSSProperties, Dispatch, SetStateAction, useEffect, useCallback, useRef } from 'react';
 import { FixedSizeGrid as Grid } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -7,8 +7,8 @@ import { CircularProgress } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 import axios from '../../utils/axios';
-import { ItemStatusMap } from '../../types';
-import MovieContext from './MovieContext';
+import { ItemStatusMap, Movie } from '../../types';
+import debounce from 'lodash.debounce';
 
 let itemStatusMap: ItemStatusMap = {};
 
@@ -25,29 +25,57 @@ const grid = css`
   }
 `;
 
-export default () => {
-  const [items, setItems] = useContext(MovieContext);
+interface MovieListProps {
+  movies: Movie[];
+  setMovies: Dispatch<SetStateAction<Movie[]>>;
+  query: string;
+}
+
+const MovieList: React.FunctionComponent<MovieListProps> = ({ movies, setMovies, query }) => {
   const [page, setPage] = useState(1);
+  const isFirstRun = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+  }, []);
+
+  const search = async (query: string, page = 1, startIndex = 0) => {
+    return axios.get(`api/movie?query=${query}&page=${page}`).then(({ data }) => {
+      setPage((page) => page + 1);
+      setMovies((prevItems: Movie[]) => [...prevItems, ...data]);
+      for (let index = 0; index < startIndex + data.length; index++) {
+        itemStatusMap[index] = LOADED;
+      }
+    });
+  };
+
+  const debounceSearch = useCallback(debounce(search, 500), []);
+
+  useEffect(() => {
+    setPage(1);
+    debounceSearch(query);
+  }, [query, debounceSearch]);
 
   const loadMoreItems = async (startIndex: number, stopIndex: number) => {
-    const { data } = await axios.get(`api/movie?page=${page}`);
-    setPage((page) => page + 1);
-    setItems((prevItems) => [...prevItems, ...data]);
-    for (let index = startIndex; index < startIndex + data.length; index++) {
-      itemStatusMap[index] = LOADED;
+    // Avoid duplicate call in useEffect
+    if (page !== 1) {
+      await search(query, page, startIndex);
     }
   };
-  // If there are more items to be loaded then add an extra row to hold a loading indicator.
-  const itemCount = items.length + COLUMN_COUNT;
+  // If there are more items to be loaded then add two extra rows to hold a loading indicator.
+  const itemCount = movies.length + COLUMN_COUNT * 2;
 
   // Every row is loaded except for loading indicator row.
-  const isItemLoaded = (index: number) => index < items.length;
+  const isItemLoaded = (index: number) => index < movies.length;
 
   // Render an item or a loading indicator.
   const Item = ({ columnIndex, rowIndex, style }: { columnIndex: number; rowIndex: number; style: CSSProperties }) => {
     let label;
     const itemIndex = rowIndex * COLUMN_COUNT + columnIndex;
-    const item = items[itemIndex];
+    const item = movies[itemIndex];
     if (item) {
       const picturePath = item.backdrop_path || item.poster_path || '';
       label = (
@@ -111,3 +139,5 @@ export default () => {
     </AutoSizer>
   );
 };
+
+export default MovieList;
