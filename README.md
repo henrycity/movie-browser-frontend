@@ -1,6 +1,6 @@
 ## Description
 
-A React and TypeScript startker kit with prettier, eslint and emotion.
+Front-End movie browser application built with React.
 
 ## Available Scripts
 
