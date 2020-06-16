@@ -1,6 +1,9 @@
 ## Description
 
-Front-End movie browser application built with React.
+Front-End movie browser application built with React and TypeScript.
+
+## Instruction
+Clone and run [movie-browser-backend](https://github.com/henrycity/movie-browser-backend)
 
 ## Available Scripts
 
