@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import { waitFor, fireEvent } from '@testing-library/dom';
 import { Size } from 'react-virtualized-auto-sizer';
 
-import MovieList from '../modules/Movie/MovieList';
+import MovieList from '../modules/Movie/Browser/MovieList';
 
 jest.mock('react-virtualized-auto-sizer', () => ({ children }: { children: (size: Size) => React.ReactNode }) =>
   children({ height: 900, width: 900 }),

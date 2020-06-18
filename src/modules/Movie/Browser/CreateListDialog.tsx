@@ -9,7 +9,7 @@ import {
   DialogActions,
 } from '@material-ui/core';
 
-import axios from '../../utils/axios';
+import axios from '../../../utils/axios';
 
 interface CreateListDialogProps {
   open: boolean;
@@ -24,9 +24,9 @@ const CreateListDialog: React.FunctionComponent<CreateListDialogProps> = ({ open
   };
 
   const handleCreate = async () => {
-    await axios.post('api/list', { listName });
     handleClose();
     setListName('');
+    await axios.post('api/list', { listName });
   };
 
   return (

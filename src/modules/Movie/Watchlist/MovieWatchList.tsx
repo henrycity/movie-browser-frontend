@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/core';
 
-import axios from '../../utils/axios';
+import axios from '../../../utils/axios';
 
 const MovieWatchList = () => {
   const [lists, setLists] = useState([]);

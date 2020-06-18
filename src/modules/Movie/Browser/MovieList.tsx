@@ -1,29 +1,20 @@
-import React, { useState, CSSProperties, Dispatch, SetStateAction, useEffect, useCallback, useRef } from 'react';
+import React, { useState, CSSProperties, Dispatch, SetStateAction, useEffect, useCallback } from 'react';
 import { FixedSizeGrid as Grid } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { css } from '@emotion/core';
 import { CircularProgress } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-
-import axios from '../../utils/axios';
-import { ItemStatusMap, Movie } from '../../types';
 import debounce from 'lodash.debounce';
+
+import axios from '../../../utils/axios';
+import { ItemStatusMap, Movie } from '../../../types';
 
 let itemStatusMap: ItemStatusMap = {};
 
 const LOADED = true;
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 const COLUMN_COUNT = 4;
-
-const grid = css`
-  display: flex;
-  justify-content: center;
-
-  div {
-    position: relative;
-  }
-`;
 
 interface MovieListProps {
   movies: Movie[];
@@ -33,19 +24,11 @@ interface MovieListProps {
 
 const MovieList: React.FunctionComponent<MovieListProps> = ({ movies, setMovies, query }) => {
   const [page, setPage] = useState(1);
-  const isFirstRun = useRef(true);
-
-  useEffect(() => {
-    if (isFirstRun.current) {
-      isFirstRun.current = false;
-      return;
-    }
-  }, []);
 
   const search = async (query: string, page = 1, startIndex = 0) => {
     return axios.get(`api/movie?query=${query}&page=${page}`).then(({ data }) => {
       setPage((page) => page + 1);
-      setMovies((prevItems: Movie[]) => [...prevItems, ...data]);
+      setMovies((prevItems) => [...prevItems, ...data]);
       for (let index = 0; index < startIndex + data.length; index++) {
         itemStatusMap[index] = LOADED;
       }
@@ -60,7 +43,7 @@ const MovieList: React.FunctionComponent<MovieListProps> = ({ movies, setMovies,
   }, [query, debounceSearch]);
 
   const loadMoreItems = async (startIndex: number, stopIndex: number) => {
-    // Avoid duplicate call in useEffect
+    // Avoid duplicate call in useEffect when component first renders
     if (page !== 1) {
       await search(query, page, startIndex);
     }
@@ -96,6 +79,7 @@ const MovieList: React.FunctionComponent<MovieListProps> = ({ movies, setMovies,
     return (
       <div
         style={style}
+        // style is an object that cannot be used with css of emotion
         css={css`
           display: flex;
           align-items: center;
@@ -114,7 +98,14 @@ const MovieList: React.FunctionComponent<MovieListProps> = ({ movies, setMovies,
           {({ onItemsRendered, ref }) => (
             <Grid
               className="grid"
-              css={grid}
+              css={css`
+                display: flex;
+                justify-content: center;
+
+                div {
+                  position: relative;
+                }
+              `}
               columnCount={COLUMN_COUNT}
               columnWidth={500}
               height={height}

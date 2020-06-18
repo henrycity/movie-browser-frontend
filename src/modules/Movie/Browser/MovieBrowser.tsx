@@ -5,8 +5,8 @@ import { useHistory } from 'react-router-dom';
 
 import MovieList from './MovieList';
 import CreateListDialog from './CreateListDialog';
-import { useAuth } from '../../utils/auth';
-import { Movie } from '../../types';
+import { useAuth } from '../../../utils/auth';
+import { Movie } from '../../../types';
 
 export default () => {
   const [open, setOpen] = useState(false);
@@ -29,8 +29,7 @@ export default () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMovies([]);
-    const query = event.target.value;
-    setQuery(query);
+    setQuery(event.target.value);
   };
 
   return (

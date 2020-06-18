@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-d
 import 'typeface-roboto';
 
 import PrivateRoute from './components/PrivateRoute';
-import MovieWatchList from './modules/Movie/MovieWatchList';
+import MovieWatchList from './modules/Movie/Watchlist/MovieWatchList';
 import LoadingIndicator from './components/LoadingIndicator';
 
 const Movies = lazy(() => import('./modules/Movie/Movies'));

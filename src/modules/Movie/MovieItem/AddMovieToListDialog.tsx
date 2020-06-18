@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { css } from '@emotion/core';
 
-import axios from '../../utils/axios';
+import axios from '../../../utils/axios';
 
 interface AddMovieToListDialogProps {
   open: boolean;

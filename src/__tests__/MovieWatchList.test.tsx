@@ -4,7 +4,7 @@ import { rest } from 'msw';
 import { render } from '@testing-library/react';
 import { waitFor } from '@testing-library/dom';
 
-import MovieWatchList from '../modules/Movie/MovieWatchList';
+import MovieWatchList from '../modules/Movie/Watchlist/MovieWatchList';
 
 const server = setupServer(
   rest.get(`http://localhost:4000/api/list`, (req, res, ctx) => {

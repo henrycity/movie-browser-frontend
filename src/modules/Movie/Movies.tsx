@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import MovieBrowser from './MovieBrowser';
-import Movie from './Movie';
+import MovieBrowser from './Browser/MovieBrowser';
+import Movie from './MovieItem/MovieItem';
 
 const Movies = () => {
   const match = useRouteMatch();

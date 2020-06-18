@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import axios from '../../utils/axios';
+import axios from '../../../utils/axios';
 import { css } from '@emotion/core';
-import LoadingIndicator from '../../components/LoadingIndicator';
-import { Movie } from '../../types';
+import LoadingIndicator from '../../../components/LoadingIndicator';
+import { Movie } from '../../../types';
 
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 

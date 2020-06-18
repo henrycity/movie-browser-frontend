@@ -10,6 +10,7 @@ import Container from '@material-ui/core/Container';
 import { Link, Redirect, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../utils/auth';
+import { css } from '@emotion/core';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -67,7 +68,13 @@ const AuthForm: React.FunctionComponent<SignUpProps> = (props) => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <div className={classes.paper}>
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        `}
+      >
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>

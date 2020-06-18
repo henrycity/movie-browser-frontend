@@ -6,7 +6,7 @@ import { setupServer } from 'msw/node';
 import { rest } from 'msw';
 import { waitFor } from '@testing-library/dom';
 
-import MovieInformation from '../modules/Movie/MovieInformation';
+import MovieInformation from '../modules/Movie/MovieItem/MovieInformation';
 
 export const renderWithRouter = (Component: React.ComponentType<any>) =>
   render(
