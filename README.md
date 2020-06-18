@@ -3,7 +3,7 @@
 Front-End movie browser application built with React and TypeScript.
 
 ## Instruction
-Clone and run [movie-browser-backend](https://github.com/henrycity/movie-browser-backend)
+Clone and run [movie-browser-backend](https://github.com/henrycity/movie-browser-backend) on port 4000.
 
 ## Available Scripts
 
