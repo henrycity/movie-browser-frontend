@@ -32,11 +32,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface SignUpProps {
+interface AuthProps {
   isSignInForm: boolean;
 }
 
-const AuthForm: React.FunctionComponent<SignUpProps> = (props) => {
+const AuthForm: React.FunctionComponent<AuthProps> = (props) => {
   const { isSignInForm } = props;
   const classes = useStyles();
   const [email, setEmail] = useState('');
