@@ -14,7 +14,3 @@ export interface Movie {
   overview: string;
   release_date: string;
 }
-
-export interface ItemStatusMap {
-  [key: number]: boolean;
-}

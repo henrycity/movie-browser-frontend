@@ -8,11 +8,8 @@ import { Link } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 
 import axios from '../../../utils/axios';
-import { ItemStatusMap, Movie } from '../../../types';
+import { Movie } from '../../../types';
 
-let itemStatusMap: ItemStatusMap = {};
-
-const LOADED = true;
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 const COLUMN_COUNT = 4;
 
@@ -29,9 +26,6 @@ const MovieList: React.FunctionComponent<MovieListProps> = ({ movies, setMovies,
     return axios.get(`api/movie?query=${query}&page=${page}`).then(({ data }) => {
       setPage((page) => page + 1);
       setMovies((prevItems) => [...prevItems, ...data]);
-      for (let index = 0; index < startIndex + data.length; index++) {
-        itemStatusMap[index] = LOADED;
-      }
     });
   };
 
