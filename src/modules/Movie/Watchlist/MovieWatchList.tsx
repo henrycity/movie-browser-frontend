@@ -1,37 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { CSSProperties } from 'react';
+import { FixedSizeList as List } from 'react-window';
+
+import { useGetListsQuery } from '../MovieItem/MovieItem.graphql.generated';
+import LoadingIndicator from '../../../components/LoadingIndicator';
 import { css } from '@emotion/core';
 
-import axios from '../../../utils/axios';
-
 const MovieWatchList = () => {
-  const [lists, setLists] = useState([]);
+  const { loading, data } = useGetListsQuery();
 
-  useEffect(() => {
-    axios.get('api/list').then((response) => {
-      // TODO: update type
-      const lists: any = Object.entries(response.data).map(([key, value]) => ({
-        name: key,
-        numberOfMovies: (value as any).length,
-      }));
-      setLists(lists);
-    });
-  }, []);
+  if (loading || !data) {
+    return <LoadingIndicator />;
+  }
+
+  const Row = ({ index, style }: { index: number; style: CSSProperties }) => (
+    <div style={style}>
+      {data.lists[index].name} ({data.lists[index].movies.length})
+    </div>
+  );
 
   return (
-    <div>
-      {lists.map((list: any) => (
-        <div
-          css={css`
-            display: flex;
-          `}
-          id={list.name}
-          key={list.name}
-        >
-          <div>{list.name}</div>
-          <div>{list.numberOfMovies}</div>
-        </div>
-      ))}
-    </div>
+    <List
+      css={css`
+        margin: 10% auto;
+      `}
+      height={500}
+      itemCount={data.lists.length}
+      itemSize={50}
+      width={300}
+    >
+      {Row}
+    </List>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, CSSProperties, Dispatch, SetStateAction, useEffect, useCallback } from 'react';
+import React, { CSSProperties, useEffect, useCallback } from 'react';
 import { FixedSizeGrid as Grid } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -7,46 +7,26 @@ import { CircularProgress } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 
-import axios from '../../../utils/axios';
-import { ItemStatusMap, Movie } from '../../../types';
+import useMovies from './hooks';
 
-let itemStatusMap: ItemStatusMap = {};
-
-const LOADED = true;
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 const COLUMN_COUNT = 4;
 
 interface MovieListProps {
-  movies: Movie[];
-  setMovies: Dispatch<SetStateAction<Movie[]>>;
   query: string;
 }
 
-const MovieList: React.FunctionComponent<MovieListProps> = ({ movies, setMovies, query }) => {
-  const [page, setPage] = useState(1);
+const MovieList: React.FunctionComponent<MovieListProps> = ({ query }) => {
+  const { movies, loadMovies } = useMovies();
 
-  const search = async (query: string, page = 1, startIndex = 0) => {
-    return axios.get(`api/movie?query=${query}&page=${page}`).then(({ data }) => {
-      setPage((page) => page + 1);
-      setMovies((prevItems) => [...prevItems, ...data]);
-      for (let index = 0; index < startIndex + data.length; index++) {
-        itemStatusMap[index] = LOADED;
-      }
-    });
-  };
-
-  const debounceSearch = useCallback(debounce(search, 500), []);
+  const debounceSearch = useCallback(debounce(loadMovies, 500), []);
 
   useEffect(() => {
-    setPage(1);
     debounceSearch(query);
   }, [query, debounceSearch]);
 
-  const loadMoreItems = async (startIndex: number, stopIndex: number) => {
-    // Avoid duplicate call in useEffect when component first renders
-    if (page !== 1) {
-      await search(query, page, startIndex);
-    }
+  const loadMoreItems = async () => {
+    loadMovies(query);
   };
   // If there are more items to be loaded then add two extra rows to hold a loading indicator.
   const itemCount = movies.length + COLUMN_COUNT * 2;
@@ -65,8 +45,8 @@ const MovieList: React.FunctionComponent<MovieListProps> = ({ movies, setMovies,
         <Link to={`/movie/${item.id}`}>
           <img
             css={css`
-              width: 95%;
-              height: 95%;
+              width: 475px;
+              height: 275px;
             `}
             alt={item.title}
             src={`${IMAGE_URL}${picturePath}`}

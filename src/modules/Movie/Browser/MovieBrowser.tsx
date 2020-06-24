@@ -6,14 +6,17 @@ import { useHistory } from 'react-router-dom';
 import MovieList from './MovieList';
 import CreateListDialog from './CreateListDialog';
 import { useAuth } from '../../../utils/auth';
-import { Movie } from '../../../types';
 
 export default () => {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const { logout } = useAuth();
+  const { setToken } = useAuth();
   const history = useHistory();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setToken('');
+  };
 
   const handleCreate = () => {
     setOpen(true);
@@ -28,7 +31,6 @@ export default () => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMovies([]);
     setQuery(event.target.value);
   };
 
@@ -46,7 +48,7 @@ export default () => {
           <Button color="inherit" onClick={handleBrowse}>
             Browse List
           </Button>
-          <Button color="inherit" onClick={logout}>
+          <Button color="inherit" onClick={handleLogout}>
             Logout
           </Button>
           <CreateListDialog open={open} handleClose={handleClose} />
@@ -70,7 +72,7 @@ export default () => {
           value={query}
         />
       </form>
-      <MovieList query={query} movies={movies} setMovies={setMovies} />
+      <MovieList query={query} />
     </>
   );
 };

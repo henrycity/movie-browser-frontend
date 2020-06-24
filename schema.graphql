@@ -1,0 +1,90 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type AuthUser {
+    token: String!
+    user: User!
+}
+
+type List {
+    id: Int!
+    movies: [Movie]!
+    name: String!
+    user: User!
+}
+
+type Movie {
+    adult: Boolean
+    backdrop_path: String
+    genre_ids: [Int]
+    id: ID!
+    original_title: String
+    overview: String!
+    popularity: Int
+    poster_path: String
+    release_date: String
+    title: String!
+    video: Boolean
+    vote_average: Int
+    vote_count: Int
+}
+
+type Mutation {
+    addMovieToList(input: AddMovieToListInput!): List!
+    createList(input: CreateListInput!): List
+    signin(input: AuthInput!): AuthUser!
+    signup(input: AuthInput!): AuthUser!
+}
+
+type Query {
+    list(input: ListInput!): List
+    lists: [List]!
+    movie(input: MovieInput!): Movie!
+    movies(input: MoviesInput!): [Movie]
+}
+
+type User {
+    email: String!
+    id: ID!
+    lists: [List]!
+}
+
+enum CacheControlScope {
+    PRIVATE
+    PUBLIC
+}
+
+input AddMovieToListInput {
+    listId: Int!
+    movieId: Int!
+}
+
+input AuthInput {
+    email: String!
+    password: String!
+}
+
+input CreateListInput {
+    name: String!
+}
+
+input ListInput {
+    id: Int!
+}
+
+input MovieInput {
+    id: Int!
+}
+
+input MoviesInput {
+    page: Int
+    query: String
+}
+
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Dialog,
@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { css } from '@emotion/core';
 
-import axios from '../../../utils/axios';
+import { useAddMovieToListMutation, useGetListsQuery } from './MovieItem.graphql.generated';
 
 interface AddMovieToListDialogProps {
   open: boolean;
@@ -20,25 +20,16 @@ interface AddMovieToListDialogProps {
 }
 
 const AddMovieToListDialog: React.FunctionComponent<AddMovieToListDialogProps> = ({ open, handleClose, movieId }) => {
-  const [listName, setListName] = useState('');
-  const [lists, setLists] = useState([]);
-
-  const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-    setListName(event.target.value as string);
-  };
+  const { data } = useGetListsQuery();
+  const [addMovieToList] = useAddMovieToListMutation();
+  const [selectedListId, setSelectedListId] = useState<number>();
 
   const handleAdd = async () => {
-    await axios.post(`api/list/${listName}`, { movieId });
+    if (selectedListId) {
+      addMovieToList({ variables: { input: { listId: selectedListId, movieId } } });
+    }
     handleClose();
   };
-
-  useEffect(() => {
-    if (open) {
-      axios.get('api/user').then(({ data }) => {
-        setLists(data.lists);
-      });
-    }
-  }, [open]);
 
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth="sm" fullWidth={true}>
@@ -58,14 +49,18 @@ const AddMovieToListDialog: React.FunctionComponent<AddMovieToListDialogProps> =
                 name: 'max-width',
                 id: 'max-width',
               }}
-              value={listName}
-              onChange={handleChange}
             >
-              {lists.map((list) => (
-                <MenuItem id={list} value={list}>
-                  {list}
-                </MenuItem>
-              ))}
+              {data &&
+                data.lists.map((list) => (
+                  <MenuItem
+                    key={list.id.toString()}
+                    id={list.id.toString()}
+                    value={list.name}
+                    onClick={() => setSelectedListId(list.id)}
+                  >
+                    {list.name}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
         </form>

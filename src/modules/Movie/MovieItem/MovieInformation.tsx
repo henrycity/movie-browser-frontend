@@ -1,27 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import axios from '../../../utils/axios';
 import { css } from '@emotion/core';
 import LoadingIndicator from '../../../components/LoadingIndicator';
-import { Movie } from '../../../types';
+import { useGetMovieQuery } from './MovieItem.graphql.generated';
 
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 
 const MovieInformation = () => {
   const { movieId } = useParams();
-  const [movie, setMovie] = useState<Movie>();
-  const [isLoading, setIsLoading] = useState(true);
+  const { loading, data } = useGetMovieQuery({ variables: { input: { id: parseInt(movieId) } } });
 
-  useEffect(() => {
-    axios.get(`api/movie/${movieId}`).then(({ data }) => {
-      setMovie(data);
-      setIsLoading(false);
-    });
-  }, [movieId]);
-  if (isLoading || !movie) {
+  if (loading || !data) {
     return <LoadingIndicator />;
   }
+
+  const { movie } = data;
+
   const picturePath = movie.backdrop_path || movie.poster_path || '';
   return (
     <div

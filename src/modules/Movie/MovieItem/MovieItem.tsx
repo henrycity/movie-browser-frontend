@@ -34,7 +34,7 @@ export default () => {
           <Button style={{ marginLeft: 'auto' }} color="inherit" onClick={handleClickOpen}>
             Add To List
           </Button>
-          <AddMovieToListDialog open={open} handleClose={handleClose} movieId={movieId} />
+          <AddMovieToListDialog open={open} handleClose={handleClose} movieId={parseInt(movieId)} />
         </Toolbar>
       </AppBar>
       <MovieInformation />

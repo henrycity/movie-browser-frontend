@@ -2,15 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { ApolloProvider } from '@apollo/react-hooks';
 
+import * as serviceWorker from './serviceWorker';
 import { AuthProvider } from './utils/auth';
+import client from './apollo';
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <ApolloProvider client={client}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

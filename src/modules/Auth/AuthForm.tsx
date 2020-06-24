@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -9,8 +9,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link, Redirect, useLocation } from 'react-router-dom';
 
-import { useAuth } from '../../utils/auth';
 import { css } from '@emotion/core';
+import { useSigninMutation, useSignupMutation } from './auth.graphql.generated';
+import { useAuth } from '../../utils/auth';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,27 +33,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface SignUpProps {
+interface AuthFormProps {
   isSignInForm: boolean;
 }
 
-const AuthForm: React.FunctionComponent<SignUpProps> = (props) => {
+const AuthForm: React.FunctionComponent<AuthFormProps> = (props) => {
   const { isSignInForm } = props;
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { token, signin, signup } = useAuth();
-  const [redirectToReferrer, setRedirectToReferrer] = useState(false);
+  const { token: authToken, setToken } = useAuth();
   const location = useLocation<{ from: string }>();
   const { from } = location.state || { from: { pathname: '/' } };
 
-  if (redirectToReferrer) {
-    return <Redirect to={from} />;
-  }
+  const [signup, { data: signupData }] = useSignupMutation();
+  const [signin, { data: signinData }] = useSigninMutation();
 
-  if (token) {
-    setRedirectToReferrer(true);
-  }
+  const token = signupData?.signup.token || signinData?.signin.token;
+
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem('token', token);
+      setToken(token);
+    }
+  }, [token, setToken]);
 
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -63,8 +67,14 @@ const AuthForm: React.FunctionComponent<SignUpProps> = (props) => {
   };
 
   const handleClick = async () => {
-    isSignInForm ? signin(email, password) : signup(email, password);
+    isSignInForm
+      ? signin({ variables: { input: { email, password } } })
+      : signup({ variables: { input: { email, password } } });
   };
+
+  if (authToken || token) {
+    return <Redirect to={from} />;
+  }
 
   return (
     <Container component="main" maxWidth="xs">

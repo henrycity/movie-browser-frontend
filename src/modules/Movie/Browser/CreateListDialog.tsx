@@ -9,7 +9,7 @@ import {
   DialogActions,
 } from '@material-ui/core';
 
-import axios from '../../../utils/axios';
+import { useCreateListMutation } from './MovieBrowser.graphql.generated';
 
 interface CreateListDialogProps {
   open: boolean;
@@ -18,6 +18,7 @@ interface CreateListDialogProps {
 
 const CreateListDialog: React.FunctionComponent<CreateListDialogProps> = ({ open, handleClose }) => {
   const [listName, setListName] = useState('');
+  const [createList] = useCreateListMutation();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setListName(event.target.value);
@@ -26,7 +27,7 @@ const CreateListDialog: React.FunctionComponent<CreateListDialogProps> = ({ open
   const handleCreate = async () => {
     handleClose();
     setListName('');
-    await axios.post('api/list', { listName });
+    createList({ variables: { input: { name: listName } } });
   };
 
   return (
