@@ -9,7 +9,7 @@
     "@testing-library/jest-dom": "^5.9.0",
     "@testing-library/react": "^10.2.1",
     "@testing-library/user-event": "^11.3.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "customize-cra": "^1.0.0",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.6",
